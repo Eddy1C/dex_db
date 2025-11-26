@@ -1,35 +1,55 @@
 package org.eddytucubal.dex_db.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "Users")
-@Data
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_user;
-    @Column(length = 150, nullable = false)
-    private String name_user;
-    @Column(length = 150, nullable = false)
-    private String last_name_user;
-    @Column(length = 150, unique = true, nullable = false)
-    private String email_user;
-    @Column(length = 200, unique = true, nullable = false)
-    private String password_user;
-    @Column(nullable = false)
-    private LocalDate date_income_user;
-    @Column(nullable = false)
-    private LocalDate birthdate_user;
-    @Column(length = 50,  nullable = false)
-    private String genre_user;
-    @Column(length =25, nullable = false)
-    private String key_user;
+    @Column(name = "id_user")
+    private Long idUser;
 
-    @OneToMany(mappedBy = "user")
-    private List<AccountEntity> account;
+    @Column(name = "name_user", length = 150, nullable = false)
+    private String nameUser;
+
+    @Column(name = "last_name_user", length = 150, nullable = false)
+    private String lastNameUser;
+
+    @Column(name = "email_user", length = 150, nullable = false, unique = true)
+    private String emailUser;
+
+    @Column(name = "password_user", length = 200, nullable = false)
+    private String passwordUser;
+
+    @Column(name = "date_income_user", nullable = false)
+    private LocalDate dateIncomeUser;
+
+    @Column(name = "birthdate_user", nullable = false)
+    private LocalDate birthdateUser;
+
+    @Column(name = "genre_user", length = 50, nullable = false)
+    private String genreUser;
+
+    @Column(name = "key_user", length = 25, nullable = false)
+    private String keyUser;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<AccountEntity> accounts;
 }

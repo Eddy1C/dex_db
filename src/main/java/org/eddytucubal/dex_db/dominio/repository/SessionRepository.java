@@ -1,4 +1,7 @@
 package org.eddytucubal.dex_db.dominio.repository;
 
-public interface SessionRepository {
+import org.eddytucubal.dex_db.persistence.entity.SessionEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
 }

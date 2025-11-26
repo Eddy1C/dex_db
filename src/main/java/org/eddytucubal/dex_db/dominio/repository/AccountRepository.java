@@ -1,4 +1,8 @@
 package org.eddytucubal.dex_db.dominio.repository;
 
-public interface AccountRepository {
+import org.eddytucubal.dex_db.persistence.entity.AccountEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
+
 }

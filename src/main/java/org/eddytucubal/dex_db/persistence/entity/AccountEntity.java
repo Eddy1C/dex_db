@@ -38,5 +38,10 @@ public class AccountEntity {
     @JoinColumn(name = "id_user", nullable = false)
     @JsonIgnore
     private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "id_category", nullable = false)
+    @JsonIgnore
+    private CategoryEntity category;
 }
 

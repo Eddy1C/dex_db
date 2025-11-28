@@ -23,5 +23,9 @@ public record MotionResponseDto(
         Long id_account_destination,
         @NotBlank(message = "Categoria asociada obligatoria")
         Long id_category
+
+        /*private AccountResponseDto accountOrigin;
+    private AccountResponseDto accountDestination;
+    private CategoryResponseDto category;*/
 ) {
 }

@@ -12,6 +12,8 @@ import org.eddytucubal.dex_db.persistence.entity.CategoryEntity;
 import org.eddytucubal.dex_db.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -20,33 +22,80 @@ public class AccountService {
     private final CategoryRepository categoryRepository;
     private final AccountMapper accountMapper;
 
+    // --------------------------------------------------------
+    // CREAR
+    // --------------------------------------------------------
     public AccountResponseDto crear(AccountRequestDto dto) {
-
-        // 1. Convertimos lo básico
         AccountEntity accountEntity = accountMapper.toEntity(dto);
 
-        // 2. Buscamos las relaciones
         UserEntity userEntity = userRepository.findById(dto.id_user())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        CategoryEntity categoryEntity = categoryRepository.findById(dto.id())
+        CategoryEntity categoryEntity = categoryRepository.findById(dto.id_category())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
 
-        // 3. Seteamos las relaciones
-        account.setUser(user);
-        account.setCategory(category);
+        accountEntity.setUser(userEntity);
+        accountEntity.setCategory(categoryEntity);
 
-        // 4. Guardamos
-        account = accountRepository.save(account);
-
-        // 5. Retornamos como ResponseDto
-        return accountMapper.toResponse(account);
+        accountEntity = accountRepository.save(accountEntity);
+        return accountMapper.toResponse(accountEntity);
     }
 
+    // --------------------------------------------------------
+    // LISTAR TODO
+    // --------------------------------------------------------
     public List<AccountResponseDto> obtenerTodo() {
         return accountRepository.findAll()
                 .stream()
                 .map(accountMapper::toResponse)
                 .toList();
+    }
+
+    // --------------------------------------------------------
+    // OBTENER POR ID
+    // --------------------------------------------------------
+    public AccountResponseDto obtenerPorId(Long id) {
+        AccountEntity entity = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+        return accountMapper.toResponse(entity);
+    }
+
+    // --------------------------------------------------------
+    // ACTUALIZAR (PUT)
+    // --------------------------------------------------------
+    public AccountResponseDto actualizar(Long id, AccountRequestDto dto) {
+
+        // 1. Obtener la cuenta existente
+        AccountEntity accountEntity = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+
+        // 2. Actualizar campos normales
+        accountMapper.updateEntityFromDto(dto, accountEntity);
+
+        // 3. Actualizar relaciones (igual que en crear)
+        UserEntity userEntity = userRepository.findById(dto.id_user())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        CategoryEntity categoryEntity = categoryRepository.findById(dto.id_category())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+
+        accountEntity.setUser(userEntity);
+        accountEntity.setCategory(categoryEntity);
+
+        // 4. Guardar cambios
+        AccountEntity actualizado = accountRepository.save(accountEntity);
+
+        // 5. Retornar response
+        return accountMapper.toResponse(actualizado);
+    }
+
+    // --------------------------------------------------------
+    // ELIMINAR
+    // --------------------------------------------------------
+    public void eliminar(Long id) {
+        if (!accountRepository.existsById(id)) {
+            throw new RuntimeException("Cuenta no encontrada");
+        }
+        accountRepository.deleteById(id);
     }
 }

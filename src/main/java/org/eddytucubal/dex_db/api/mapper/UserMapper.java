@@ -5,6 +5,7 @@ import org.eddytucubal.dex_db.dominio.dto.UserResponseDto;
 import org.eddytucubal.dex_db.persistence.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -16,4 +17,5 @@ public interface UserMapper {
 
     // De Entity → ResponseDto (para responder al cliente)
     UserResponseDto toResponse(UserEntity userEntity);
+    void updateEntityFromDto(UserRequestDto dto, @MappingTarget UserEntity entity);
 }

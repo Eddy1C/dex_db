@@ -10,16 +10,29 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = { UserMapper.class})
 public interface CategoryMapper {
-    CategoryMapper CATEGORY_MAPPER = Mappers.getMapper(CategoryMapper.class);
+    // ---------------- ENTITY → RESPONSE ----------------
+    @Mapping(source = "idCategory", target = "id_category")
+    @Mapping(source = "nameCategory", target = "nombre_categoria")
+    @Mapping(source = "descriptionCategory", target = "descripcion_categoria")
+    @Mapping(source = "typeCategory", target = "tipo_categoria")
+    @Mapping(source = "user.idUser", target = "id_user")
+    CategoryResponseDto toResponse(CategoryEntity entity);
 
-    CategoryResponseDto toResponse(CategoryEntity categoryEntity);
-
+    // ---------------- REQUEST → ENTITY ----------------
     @Mapping(target = "idCategory", ignore = true)
-    @Mapping(target = "user", ignore = true)        // se setean en el service
+    @Mapping(source = "nombre_categoria", target = "nameCategory")
+    @Mapping(source = "descripcion_categoria", target = "descriptionCategory")
+    @Mapping(source = "tipo_categoria", target = "typeCategory")
+    @Mapping(target = "user", ignore = true)   // Se setea en el service
+    @Mapping(target = "movements", ignore = true) // List<MotionEntity> (siempre ignorar en DTO)
     CategoryEntity toEntity(CategoryRequestDto dto);
 
+    // ---------------- UPDATE ----------------
     @Mapping(target = "idCategory", ignore = true)
+    @Mapping(source = "nombre_categoria", target = "nameCategory")
+    @Mapping(source = "descripcion_categoria", target = "descriptionCategory")
+    @Mapping(source = "tipo_categoria", target = "typeCategory")
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "movements", ignore = true)
     void updateFromDto(CategoryRequestDto dto, @MappingTarget CategoryEntity entity);
-
 }

@@ -1,6 +1,5 @@
 package org.eddytucubal.dex_db.dominio.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.eddytucubal.dex_db.api.mapper.ReferenceMapper;
 import org.eddytucubal.dex_db.dominio.dto.ReferenceRequestDto;
@@ -21,29 +20,72 @@ public class ReferenceService {
     private final UserRepository userRepository;
     private final ReferenceMapper referenceMapper;
 
+    // --------------------------------------------------------
+    // CREAR
+    // --------------------------------------------------------
     public ReferenceResponseDto crear(ReferenceRequestDto dto) {
-
-        // 1. Convertimos lo básico
         ReferenceEntity referenceEntity = referenceMapper.toEntityReference(dto);
 
-        // 2. Buscamos las relaciones
         UserEntity userEntity = userRepository.findById(dto.id_user())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // 3. Seteamos las relaciones
         referenceEntity.setUser(userEntity);
 
-        // 4. Guardamos
         referenceEntity = referenceRepository.save(referenceEntity);
-
-        // 5. Retornamos como ResponseDto
         return referenceMapper.toResponseDto(referenceEntity);
     }
 
+    // --------------------------------------------------------
+    // LISTAR TODO
+    // --------------------------------------------------------
     public List<ReferenceResponseDto> obtenerTodo() {
         return referenceRepository.findAll()
                 .stream()
                 .map(referenceMapper::toResponseDto)
                 .toList();
+    }
+
+    // --------------------------------------------------------
+    // OBTENER POR ID
+    // --------------------------------------------------------
+    public ReferenceResponseDto obtenerPorId(Long id) {
+        ReferenceEntity referenceEntity = referenceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+        return referenceMapper.toResponseDto(referenceEntity);
+    }
+
+    // --------------------------------------------------------
+    // ACTUALIZAR (PUT)
+    // --------------------------------------------------------
+    public ReferenceResponseDto actualizar(Long id, ReferenceRequestDto dto) {
+
+        // 1. Obtener la cuenta existente
+        ReferenceEntity referenceEntity = referenceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+
+        // 2. Actualizar campos normales
+        referenceMapper.updateEntityFromDto(dto, referenceEntity);
+
+        // 3. Actualizar relaciones (igual que en crear)
+        UserEntity userEntity = userRepository.findById(dto.id_user())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        referenceEntity.setUser(userEntity);
+
+        // 4. Guardar cambios
+        ReferenceEntity actualizado = referenceRepository.save(referenceEntity);
+
+        // 5. Retornar response
+        return referenceMapper.toResponseDto(actualizado);
+    }
+
+    // --------------------------------------------------------
+    // ELIMINAR
+    // --------------------------------------------------------
+    public void eliminar(Long id) {
+        if (!referenceRepository.existsById(id)) {
+            throw new RuntimeException("Cuenta no encontrada");
+        }
+        referenceRepository.deleteById(id);
     }
 }

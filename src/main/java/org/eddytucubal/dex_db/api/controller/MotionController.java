@@ -34,8 +34,8 @@ public class MotionController {
 
     // UPDATE
     @PutMapping("/{id}")
-    public MotionResponseDto actualizar(@PathVariable Long id, @RequestBody MotionRequestDto motionRequestDto) {
-        return motionService.actualizar(id, motionRequestDto);
+    public MotionResponseDto actualizar(@PathVariable Long id, @RequestBody MotionRequestDto dto ) {
+        return motionService.actualizar(id, dto);
     }
 
     // DELETE

@@ -20,6 +20,8 @@ public record MotionRequestDto(
     @NotBlank(message = "Cuneta de destino obligatorio")
     Long id_account_destination,
     @NotBlank(message = "Categoria asociada obligatoria")
-    Long id_category
+    Long id_category,
+    @NotBlank(message = "Cuenta asociada obligatoria")
+    Long id_account
 ) {
 }

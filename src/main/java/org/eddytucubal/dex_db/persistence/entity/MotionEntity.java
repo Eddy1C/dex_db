@@ -53,4 +53,9 @@ public class MotionEntity {
     @JoinColumn(name = "id_category")
     @JsonIgnore
     private CategoryEntity category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_account")
+    @JsonIgnore
+    private AccountEntity account;
 }

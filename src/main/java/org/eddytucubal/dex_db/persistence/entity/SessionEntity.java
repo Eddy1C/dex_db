@@ -60,4 +60,5 @@ public class SessionEntity {
     @JoinColumn(name = "id_user", nullable = false)
     @JsonIgnore
     private UserEntity user;
+
 }

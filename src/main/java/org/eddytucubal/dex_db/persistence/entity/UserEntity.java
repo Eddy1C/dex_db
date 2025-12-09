@@ -41,7 +41,7 @@ public class UserEntity {
     @Column(name = "genre_user", length = 50, nullable = false)
     private String genreUser;
 
-    @Column(name = "key_user", length = 25, nullable = false)
+    @Column(name = "key_user", length = 250)
     private String keyUser;
 
     @OneToMany(

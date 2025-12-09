@@ -17,7 +17,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final AccountMapper accountMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, AccountMapper accountMapper){
+    public UserService(UserRepository userRepository, UserMapper userMapper, AccountMapper accountMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.accountMapper = accountMapper;
@@ -65,5 +65,13 @@ public class UserService {
                 .stream()
                 .map(accountMapper::toResponse)
                 .toList();
+    }
+
+    public UserResponseDto obtenerPorEmail(String emailUser) {
+        UserEntity userEntity = userRepository.findByEmailUser(emailUser);
+        if (userEntity == null) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+        return userMapper.toResponse(userEntity);
     }
 }

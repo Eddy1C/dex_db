@@ -49,4 +49,10 @@ public class UserController {
         userService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity<UserResponseDto> obtenerPorEmail(@PathVariable String emailUser) {
+        return ResponseEntity.ok(userService.obtenerPorEmail(emailUser));
+    }
+
 }

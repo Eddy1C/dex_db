@@ -34,7 +34,6 @@ public interface MotionMapper {
     @Mapping(target = "amountMovement", expression = "java(Double.parseDouble(dto.monto_movimiento()))")
     MotionEntity toEntity(MotionRequestDto dto);
 
-
     // ACTUALIZAR ENTITY EXISTENTE
     @Mapping(target = "idMovement", ignore = true)
     @Mapping(target = "accountOrigin", ignore = true)
